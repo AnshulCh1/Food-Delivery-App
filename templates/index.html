@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Food Delivery</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
+
+{% extends "base.html" %}
+
+{% block title %}Food Menu{% endblock %}
+
+{% block content %}
 <div class="container">
     <h1 class="my-4">Food Menu</h1>
     <div id="menu" class="row"></div>
@@ -37,5 +36,4 @@ function addToCart(id) {
     }).then(() => alert('Added to cart!'));
 }
 </script>
-</body>
-</html>
+{% endblock %}

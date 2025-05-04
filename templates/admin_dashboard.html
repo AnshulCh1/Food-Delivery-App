@@ -32,6 +32,8 @@
                         <th>ID</th>
                         <th>Username</th>
                         <th>Email</th>
+                        <th>Mobile Number</th>
+                        <th>Address</th>
                         <th>Role</th>
                     </tr>
                 </thead>
@@ -41,12 +43,15 @@
                         <td>{{ user.id }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
+                        <td>{{ user.mobile_number if user.mobile_number else 'Not Provided' }}</td>
+                        <td>{{ user.address if user.address else 'Not Provided' }}</td>
                         <td>{{ user.role }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
 
         <h2>Food Menu</h2>
         <div class="table-responsive">

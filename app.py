@@ -130,27 +130,60 @@ def add_menu_item():
     return redirect(url_for('admin'))
 
 # Update form route for customer 
-@app.route('/update-profile', methods=['GET', 'POST'])
-def update_profile():
-    if 'user_id' not in session:
-        flash('Please login first', 'danger')
-        return redirect(url_for('login'))
+# @app.route('/update-profile', methods=['GET', 'POST'])
+# def update_profile():
+#     if 'user_id' not in session:
+#         flash('Please login first', 'danger')
+#         return redirect(url_for('login'))
 
-    user = User.query.get(session['user_id'])
+#     user = User.query.get(session['user_id'])
+#     if request.method == 'POST':
+#         user.mobile_number = request.form['mobile_number']
+#         user.address = request.form['address']
+        
+#         # Ensure mobile and address are filled
+#         if not user.mobile_number or not user.address:
+#             flash('Both mobile number and address are required!', 'danger')
+#             return redirect(url_for('update_profile'))
+
+#         db.session.commit()
+#         flash('Profile updated successfully!', 'success')
+#         return redirect(url_for('home'))  # Or redirect to a page that shows order button
+
+#     return render_template('update_profile.html', user=user)
+
+# Update Profile
+@app.route('/profile/update', methods=['GET', 'POST'])
+def update_profile():
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+    
+    if not user:
+        return redirect('/login')
+    
     if request.method == 'POST':
         user.mobile_number = request.form['mobile_number']
         user.address = request.form['address']
-        
-        # Ensure mobile and address are filled
-        if not user.mobile_number or not user.address:
-            flash('Both mobile number and address are required!', 'danger')
-            return redirect(url_for('update_profile'))
-
         db.session.commit()
-        flash('Profile updated successfully!', 'success')
-        return redirect(url_for('home'))  # Or redirect to a page that shows order button
+        return redirect('/cart')  # Redirect after updating
 
-    return render_template('update_profile.html', user=user)
+    return render_template('profile.html')
+
+
+@app.route('/api/user/details')
+def get_user_details():
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+    return jsonify({
+        'mobile_number': user.mobile_number,
+        'address': user.address
+    })
+
+# order details route
+# @app.route('/order/<int:order_id>')
+# def order_details(order_id):
+#     order = Order.query.get_or_404(order_id)  
+#     return render_template('order_details.html', order=order)
 
 
 
@@ -180,8 +213,14 @@ class CartViewAPI(Resource):
             result.append({'name': food.name, 'price': food.price, 'quantity': item.quantity})
         return jsonify(result)
 
+
 class CheckoutAPI(Resource):
     def post(self):
+        # Ensure the user has provided mobile number and address
+        user = User.query.get(session.get('user_id'))
+        if not user.mobile_number or not user.address:
+            return {'message': 'Please update your profile with a mobile number and address before placing an order'}, 400
+        
         cart = CartItem.query.all()
         total = sum(FoodItem.query.get(i.food_id).price * i.quantity for i in cart)
         items = ','.join([str(i.food_id) for i in cart])
@@ -189,7 +228,8 @@ class CheckoutAPI(Resource):
         db.session.add(new_order)
         CartItem.query.delete()
         db.session.commit()
-        return {'message': 'Order placed', 'total': total}
+        return {'message': 'Order placed successfully!', 'total': total}
+
 
 
 api.add_resource(MenuAPI, '/api/menu')
