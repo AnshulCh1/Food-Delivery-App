@@ -1,0 +1,44 @@
+
+/* Basic styling */
+body {
+    background-color: #f4f7fa;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Form Card */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Button */
+.btn {
+    border-radius: 20px;
+}
+
+/* Spacing for sections */
+.mt-3 {
+    margin-top: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+/* Page header */
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Text Links */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+

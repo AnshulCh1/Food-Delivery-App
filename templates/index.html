@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Food Delivery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Food Menu</h1>
+    <div id="menu" class="row"></div>
+    <a href="/cart" class="btn btn-success mt-3">Go to Cart</a>
+</div>
+<script>
+fetch('/api/menu')
+  .then(res => res.json())
+  .then(data => {
+    const menuDiv = document.getElementById('menu');
+    data.forEach(item => {
+      menuDiv.innerHTML += `
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5>${item.name}</h5>
+                    <p>$${item.price}</p>
+                    <button onclick="addToCart(${item.id})" class="btn btn-primary">Add to Cart</button>
+                </div>
+            </div>
+        </div>`;
+    });
+  });
+
+function addToCart(id) {
+    fetch('/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ food_id: id })
+    }).then(() => alert('Added to cart!'));
+}
+</script>
+</body>
+</html>
